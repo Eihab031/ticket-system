@@ -1,8 +1,9 @@
 import asyncHandler from 'express-async-handler'
 import User from '../models/User.model.js'
 import jwtToken from '../utils/jwt.token.js'
+import bcrypt from 'bcryptjs'
 
-//creating Registration Controller
+//creating user Registration Controller ***
 // @access Public
 export const signup= asyncHandler(async (req,res)=>{
 
@@ -38,7 +39,7 @@ export const signup= asyncHandler(async (req,res)=>{
     const role= secretKey=== process.env.ADMIN_SECRET_KEY?'admin':'player';
 
     //create the User in MongoDb 
-    const user= User.create({
+    const user= await User.create({
         fullName,
         email,
         password,
@@ -61,3 +62,64 @@ export const signup= asyncHandler(async (req,res)=>{
         throw new Error("invalid User data")
     }
 })
+
+//  Login controller *****
+export const login= asyncHandler(async(req,res)=>{
+    const {email,password}= req.body;
+    
+    //checking if email is correct 
+    if(!email ||!password ){
+        res.status(400);
+        throw new Error('please fill all required fields');
+    }
+    
+    
+    const user= await User.findOne({email}); // check if email is exist
+
+    if(user && (await bcrypt.compare(password,user.password))){  // checking if password is correct
+        res.status(200).json({
+            _id:user._id,
+            fullName:user.fullName,
+            email:user.email,
+            role:user.role,
+            token: jwtToken(user._id),
+        })
+    }
+    else{
+        res.status(401);
+        throw new Error('email or password is not correct');
+    }
+    
+})
+
+//Get current logged-in user data *****
+export const getMe= asyncHandler(async (req,res) => {
+    res.status(200).json(req.user);
+});
+
+//Get all players in the ticket-system ,"only authorized by admin" ****
+export const getAllPlayers= asyncHandler(async (req,res) => {
+    
+    //check if the the user has "admin" role
+    if (req.user.role.toString() === 'admin') {
+        const players= await User.find({role:'player'});
+        res.status(201).json(players);
+    }
+    res.status(401);
+    throw new Error("not Authorized")
+})
+// Delete User controller *****
+export const deleteUser= asyncHandler(async (req,res) => {
+    // checking if user want to delete own account or with Admin Role
+    const user =await User.findById(req.params.id);
+    if (user.id.toString() !==req.params.id && user.role !=='admin') {
+        res.status(401);
+        throw new Error('Not authorized to delete this account');
+    }
+    await user.deleteOne();
+})
+//TODO creating Logout controller
+export const logout= asyncHandler(async(req,res)=>{
+    res.status(200).json({message:'User logout successfully'});
+})
+
