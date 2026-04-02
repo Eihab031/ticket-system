@@ -3,7 +3,7 @@ import User from '../models/User.model.js';
 import asyncHandler from 'express-async-handler';
 
 // protect function to check all logged-in Users
-export const protect = asyncHandler(async (req,res,next) => {
+const protect = asyncHandler(async (req,res,next) => {
     let token;
     
     //check if the Authourization header exist and start with "Bearer"
@@ -28,3 +28,4 @@ export const protect = asyncHandler(async (req,res,next) => {
         throw new Error('not authorized,no token provided');
     }
 });
+export default protect;

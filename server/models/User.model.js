@@ -20,7 +20,7 @@ const userSchema= new mongoose.Schema({
         type:String,
         required:true,
         enum:['player','admin'],
-        defualt:'player'
+        default:'player'
     }
 },{timestamps:true});
 // Encrypting User's Password before saving to DataBase 

@@ -103,7 +103,7 @@ export const getAllPlayers= asyncHandler(async (req,res) => {
     //check if the the user has "admin" role
     if (req.user.role.toString() === 'admin') {
         const players= await User.find({role:'player'});
-        res.status(201).json(players);
+        return res.status(200).json(players);
     }
     res.status(401);
     throw new Error("not Authorized")
@@ -112,11 +112,17 @@ export const getAllPlayers= asyncHandler(async (req,res) => {
 export const deleteUser= asyncHandler(async (req,res) => {
     // checking if user want to delete own account or with Admin Role
     const user =await User.findById(req.params.id);
-    if (user.id.toString() !==req.params.id && user.role !=='admin') {
+    if (req.user.id.toString() !==req.params.id && req.user.role !=='admin') {
         res.status(401);
         throw new Error('Not authorized to delete this account');
     }
     await user.deleteOne();
+    // return success message
+    res.status(200).json({
+        success:true,
+        message:'User deleted successfully',
+        data:user,
+    });
 })
 //TODO creating Logout controller
 export const logout= asyncHandler(async(req,res)=>{

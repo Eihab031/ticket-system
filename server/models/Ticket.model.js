@@ -29,5 +29,5 @@ const ticketSchema= mongoose.Schema({
     }
 },{timestamps:true})
 
-const Ticket= new mongoose.model('ticket',ticketSchema);
+const Ticket= new mongoose.model('Ticket',ticketSchema);
 export default Ticket;

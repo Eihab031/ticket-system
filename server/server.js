@@ -5,7 +5,9 @@ import connectDB from "./config/db.js";
 import userRouter from "./routes/user.routes.js";
 import { errorHandler } from "./middleware/error.middleware.js";
 import ticketRouter from './routes/ticket.route.js'
-console.log('Error Handler Loaded:', errorHandler);
+import messageRouter from './routes/message.route.js'
+
+
 dotenv.config();
 const port= process.env.PORT ||5000;
 const app= express();
@@ -14,8 +16,9 @@ const app= express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/api/auth/user',userRouter);
+app.use('/api/auth/user',userRouter); //User router using auth middleware
 app.use('/api/tickets',ticketRouter); //ticket router using auth middleware
+app.use('/api/tickets/:id/messages',messageRouter); // messages router using auth middleware
 
 //Error handler middleware for User controller
 app.use(errorHandler);

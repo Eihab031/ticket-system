@@ -86,5 +86,9 @@ export const deleteTicket = asyncHandler(async (req, res) => {
 
     await ticket.deleteOne();
 
-    res.status(200).json({ message: 'Ticket deleted' });
+    res.status(200).json({
+        success:true,
+        message:'Ticket deleted successfully',
+        data:ticket,
+    });
 });
