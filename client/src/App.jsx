@@ -1,21 +1,42 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom";
-import Navbar from "./components/NavBar";
+import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import AppNavbar from "./components/Navbar";
 import RegisterPage from "./pages/RegisterPage";
 import LoginPage from "./pages/LoginPage";
 import Ticketdetails from "./pages/Ticketdetails";
 import TicketsPage from "./pages/TicketsPage";
 import NotfoundPage from "./pages/NotfoundPage";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
   return (
     <BrowserRouter>
-      <Navbar />
+      <AppNavbar />
       <Routes>
+        {/* Public Routes */}
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
-        <Route path="/Tickets/:id" element={<Ticketdetails />} />
-        <Route path="/Tickets" element={<TicketsPage />} />
+
+        {/* Protected Routes */}
+        <Route
+          path="/Tickets/:id"
+          element={
+            <ProtectedRoute>
+              <Ticketdetails />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Tickets"
+          element={
+            <ProtectedRoute>
+              <TicketsPage />
+            </ProtectedRoute>
+          }
+        />
         <Route path="*" element={<NotfoundPage />} />
+
+        {/* Redirect root to Tickets Page */}
+        <Route path="/" element={<Navigate to="/tickets" replace />} />
       </Routes>
     </BrowserRouter>
   );
