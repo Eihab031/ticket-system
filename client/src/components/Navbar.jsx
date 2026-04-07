@@ -1,6 +1,7 @@
 import { Link, useNavigate } from "react-router-dom";
 import { Navbar, Nav, Container, Button } from "react-bootstrap";
 import { useAuth } from "../context/AuthContext";
+import Avatar from "./Avatar";
 
 const AppNavbar = () => {
   const { user, logout } = useAuth();
@@ -13,7 +14,7 @@ const AppNavbar = () => {
     <Navbar bg="dark" variant="dark" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to="/tickets">
-          Ticket system
+          Ticket-system
         </Navbar.Brand>
         <Navbar.Toggle aria-controls="main-nav" />
         <Navbar.Collapse id="main-nav">
@@ -21,12 +22,15 @@ const AppNavbar = () => {
             {user ? (
               //if user logged-in
               <>
-                <Nav.Item className="d-flex align-items-center text-light me-3">
-                  Hi <span>{user?.fullName.split(" ")[0]}</span>
+                <div className="d-flex align-items-center gap-2 mx-3">
+                  <Avatar name={user.fullName} role={user.role} size={35} />
+                  <span className="text-light">
+                    {user.fullName.split(" ")[0]}
+                  </span>
                   {user.role === "admin" && (
                     <span className="badge bg-warning text-dark">Support</span>
                   )}
-                </Nav.Item>
+                </div>
                 <Button
                   variant="outline-light"
                   size="sm"
