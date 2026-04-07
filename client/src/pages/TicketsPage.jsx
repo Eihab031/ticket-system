@@ -1,9 +1,16 @@
-import React from 'react'
+import { useAuth } from "../context/AuthContext";
+import AdminDashboard from "./AdminDashboard";
+import PlayerDashboard from "./PlayerDashboard";
 
 const TicketsPage = () => {
-  return (
-    <div>TicketsPage</div>
-  )
-}
+  const { user } = useAuth();
 
-export default TicketsPage
+  // Route based on role
+  if (user?.role === "admin") {
+    return <AdminDashboard />;
+  }
+
+  return <PlayerDashboard />;
+};
+
+export default TicketsPage;
