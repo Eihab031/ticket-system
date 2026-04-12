@@ -6,6 +6,8 @@ import Ticketdetails from "./pages/Ticketdetails";
 import TicketsPage from "./pages/TicketsPage";
 import NotfoundPage from "./pages/NotfoundPage";
 import ProtectedRoute from "./components/ProtectedRoute";
+import NewTicket from "./pages/NewTicket";
+import UsersPage from "./pages/UsersPage";
 
 function App() {
   return (
@@ -33,6 +35,8 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route path="/new-ticket" element={<NewTicket />} />
+        <Route path="/users" element={<UsersPage />} />
         <Route path="*" element={<NotfoundPage />} />
 
         {/* Redirect root to Tickets Page */}

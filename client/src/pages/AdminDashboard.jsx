@@ -3,7 +3,6 @@ import {
   Container,
   Row,
   Col,
-  Nav,
   Table,
   Badge,
   Form,
@@ -12,13 +11,17 @@ import {
 } from "react-bootstrap";
 import { useNavigate } from "react-router-dom";
 import axios from "../api/axios.js";
+import AdminSidebar from "../components/AdminSidebar.jsx";
 
 const AdminDashboard = () => {
   const [tickets, setTickets] = useState([]);
+
+  // search state
+  const [search, setSearch] = useState("");
+
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Fetch all tickets
     const fetchTickets = async () => {
       try {
         const { data } = await axios.get("/tickets");
@@ -30,7 +33,25 @@ const AdminDashboard = () => {
     fetchTickets();
   }, []);
 
-  // checking backend statuses for  UI badges
+  // Search Filter
+  // when search is empty → filteredTickets = all tickets
+  const filteredTickets = tickets.filter((ticket) => {
+    // convert search to lowercase for case-insensitive comparison
+    const searchLower = search.toLowerCase();
+
+    // check if title contains the search text
+    const titleMatch = ticket.title.toLowerCase().includes(searchLower);
+
+    // check if player name contains the search text
+    // we use ?. because ticket.user might be null in some cases
+    const nameMatch = ticket.user.fullName?.toLowerCase().includes(searchLower);
+
+    // return true if title OR name matches
+    // true  = keep this ticket in the filtered array
+    // false = remove it from the filtered array
+    return titleMatch || nameMatch;
+  });
+
   const getStatusBadge = (status) => {
     switch (status) {
       case "new":
@@ -39,10 +60,10 @@ const AdminDashboard = () => {
             New
           </Badge>
         );
-      case "open":
+      case "in process":
         return (
           <Badge bg="warning" text="dark" className="px-3 py-2 rounded-pill">
-            Open
+            in process
           </Badge>
         );
       case "closed":
@@ -60,51 +81,48 @@ const AdminDashboard = () => {
     <Container fluid className="vh-100 bg-light p-0">
       <Row className="h-100 g-0">
         {/* ── Sidebar ── */}
-        <Col
-          md={2}
-          lg={2}
-          className="bg-white border-end d-flex flex-column pt-4"
-        >
-          <div className="px-4 mb-4 fw-bold fs-5 d-flex align-items-center">
-            {/* logo placeholder */}
-            <span className="bg-dark text-white rounded-circle px-2 py-1 me-2 fs-6">
-              A
-            </span>
-            Admin Panel
-          </div>
-
-          <Nav className="flex-column w-100">
-            {/* Active Link styling */}
-            <Nav.Link className="text-primary py-3 px-4 bg-primary bg-opacity-10 fw-semibold border-start border-4 border-primary">
-              Tickets
-            </Nav.Link>
-            {/* Inactive Links */}
-            <Nav.Link className="text-secondary py-3 px-4 border-start border-4 border-white">
-              Users
-            </Nav.Link>
-            <Nav.Link className="text-secondary py-3 px-4 border-start border-4 border-white">
-              Reports
-            </Nav.Link>
-            <Nav.Link className="text-secondary py-3 px-4 border-start border-4 border-white">
-              Settings
-            </Nav.Link>
-          </Nav>
-        </Col>
-
-        {/* ── Main Content Area ── */}
-        <Col md={10} lg={10} className="p-5">
-          {/* Top Bar: Title & Search */}
-          <div className="d-flex justify-content-between align-items-center mb-4">
+        <AdminSidebar />
+        {/* ── Main Content ── */}
+        <Col md={10} className="p-5">
+          {/* ── Top Bar ── */}
+          <div className="d-flex justify-content-between align-items-center mb-2">
             <h2 className="fw-bold m-0">Support Tickets</h2>
-            <div style={{ width: "300px" }}>
+
+            {/* search bar */}
+            <div style={{ width: "320px" }}>
               <InputGroup>
-                <Form.Control placeholder="Search..." className="bg-white" />
-                <Button variant="primary">Search</Button>
+                <Form.Control
+                  placeholder="Search by title or player name..."
+                  className="bg-white"
+                  value={search}
+                  // every keystroke updates search state
+                  // filteredTickets recalculates automatically
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+                {/* only show clear button when something is typed */}
+                {search && (
+                  <Button
+                    variant="outline-secondary"
+                    // reset search → shows all tickets again
+                    onClick={() => setSearch("")}
+                  >
+                    ✕
+                  </Button>
+                )}
               </InputGroup>
             </div>
           </div>
 
-          {/* Table Card */}
+          {/* ── Results Count ── */}
+          <p className="text-muted small mb-4">
+            {search
+              ? // search is active .show how many matched
+                `${filteredTickets.length} result${filteredTickets.length !== 1 ? "s" : ""} for "${search}"`
+              : // no search .show total count
+                `${tickets.length} total ticket${tickets.length !== 1 ? "s" : ""}`}
+          </p>
+
+          {/* ── Table Card ── */}
           <div className="bg-white p-4 rounded shadow-sm">
             <Table hover responsive className="align-middle border-bottom-0">
               <thead>
@@ -125,11 +143,9 @@ const AdminDashboard = () => {
                 </tr>
               </thead>
               <tbody>
-                {/* mapping tickets and render them */}
-                {tickets.map((ticket) => (
+                {filteredTickets.map((ticket) => (
                   <tr key={ticket._id}>
                     <td className="py-3">#{ticket._id.substring(0, 6)}</td>
-
                     <td className="py-3">
                       {ticket.user?.fullName || "Unknown"}
                     </td>
@@ -148,10 +164,15 @@ const AdminDashboard = () => {
                   </tr>
                 ))}
 
-                {tickets.length === 0 && (
+                {/* ── Empty States ── */}
+                {filteredTickets.length === 0 && (
                   <tr>
                     <td colSpan="5" className="text-center py-5 text-muted">
-                      No tickets found.
+                      {search
+                        ? // search returned nothing
+                          `No tickets found matching "${search}"`
+                        : // no tickets at all in the system
+                          "No tickets yet."}
                     </td>
                   </tr>
                 )}
