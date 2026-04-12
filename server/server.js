@@ -13,8 +13,18 @@ const app = express();
 
 //read JSON body Data
 app.use(express.json());
-app.use(cors());
 
+//CORS
+app.use(
+  cors({
+    origin: process.env.CLIENT_URL || "*",
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    credentials: true,
+  }),
+);
+app.get("/", (req, res) => {
+  res.json({ message: "API is running..." }); //server health check
+});
 app.use("/api/auth/user", userRouter); //User router using auth middleware
 app.use("/api/tickets", ticketRouter); //ticket router using auth middleware
 app.use("/api/tickets/:id/messages", messageRouter); // messages router using auth middleware
