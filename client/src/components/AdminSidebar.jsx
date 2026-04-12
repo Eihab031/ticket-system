@@ -17,7 +17,7 @@ const AdminSidebar = () => {
     >
       <div className="px-4 mb-4 fw-bold fs-5 d-flex align-items-center">
         <img
-          src="../public/admin.gif"
+          src="/admin.gif"
           width="50"
           height="50"
           className="rounded-circle "
