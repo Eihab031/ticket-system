@@ -6,7 +6,7 @@ A full-stack MERN support ticket system built for gaming platforms. Players subm
 
 ## 🌐 Live Demo
 
-> deploy with Railway (backend) + Vercel (frontend)
+> [Ticket-System](https://ticket-system-bice-eight.vercel.app)
 
 ---
 
@@ -15,8 +15,9 @@ A full-stack MERN support ticket system built for gaming platforms. Players subm
 
 | Player Dashboard           | Admin Dashboard                 | Ticket Detail                      |
 | -------------------------- | ------------------------------- | ---------------------------------- |
-| [Player Dashboard](https://github.com/user-attachments/assets/2dc532a3-2949-4dcd-b40c-32e941f35ba6) | [Admin Dashboard](https://github.com/user-attachments/assets/aa4d5ad6-9708-43c5-9e47-feafb7ae0314) | [TicketDetails](https://github.com/user-attachments/assets/9c6018e7-9679-485a-8e6c-e3c604d1a227) |
-
+| ![Player Dashboard](https://github.com/user-attachments/assets/2dc532a3-2949-4dcd-b40c-32e941f35ba6) | ![Admin Dashboard](https://github.com/user-attachments/assets/aa4d5ad6-9708-43c5-9e47-feafb7ae0314) | ![TicketDetails](https://github.com/user-attachments/assets/9c6018e7-9679-485a-8e6c-e3c604d1a227) |
+|SignUp Page |
+|![signup_page](https://github.com/Eihab031/ticket-system/blob/9b4938cbae9d4a9563dd72acd11abd5557b957b4/client/public/signup_page.png)|
 ---
 
 ## ✨ Features
