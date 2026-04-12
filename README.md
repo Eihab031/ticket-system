@@ -10,11 +10,12 @@ A full-stack MERN support ticket system built for gaming platforms. Players subm
 
 ---
 
+
 ## 📸 Screenshots
 
 | Player Dashboard           | Admin Dashboard                 | Ticket Detail                      |
 | -------------------------- | ------------------------------- | ---------------------------------- |
-| Player views their tickets | Admin sees all tickets + search | Full conversation + status control |
+| [Player Dashboard](https://github.com/user-attachments/assets/2dc532a3-2949-4dcd-b40c-32e941f35ba6) | [Admin Dashboard](https://github.com/user-attachments/assets/aa4d5ad6-9708-43c5-9e47-feafb7ae0314) | [TicketDetails](https://github.com/user-attachments/assets/9c6018e7-9679-485a-8e6c-e3c604d1a227) |
 
 ---
 
